@@ -1,0 +1,557 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/sweetalert.css' %} ">
+<link rel="stylesheet" href="https://paytech.sn/cdn/paytech.min.css">
+<style>
+    #main {
+        margin: 50px 0;
+    }
+
+    #main #faq .card {
+        margin-bottom: 30px;
+        border: 0;
+    }
+
+    #main #faq .card .card-header {
+        border: 0;
+        -webkit-box-shadow: 0 0 20px 0 #a67c00;
+        box-shadow: 0 0 20px 0 rgba(166, 124, 0, 0.5);
+        border-radius: 2px;
+        padding: 0;
+    }
+
+    #main #faq .card .card-header .btn-header-link {
+        color: #fff;
+        display: block;
+        text-align: left;
+        background: #EFEFF0;
+        color: #222;
+        padding: 20px;
+    }
+
+    #main #faq .card .card-header .btn-header-link:after {
+        content: "\f107";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        float: right;
+    }
+
+    #main #faq .card .card-header .btn-header-link.collapsed {
+        background: #fff;
+        color: black;
+    }
+
+    #main #faq .card .card-header .btn-header-link.collapsed:after {
+        content: "\f106";
+    }
+
+    #main #faq .card .collapsing {
+        background: rgba(236, 236, 236, 0.3);
+        line-height: 30px;
+    }
+
+    #main #faq .card .collapse {
+        border: 0;
+    }
+
+    #main #faq .card .collapse.show {
+        background: rgba(242, 241, 239, 0.5);
+        line-height: 30px;
+        color: #000;
+    }
+
+    .calculate-btn:hover {
+        color: white;
+    }
+
+    .noUi-connect {
+        background-color: grey;
+    }
+
+    .noUi-touch-area {
+        background-color: grey;
+        border-radius: 100%;
+    }
+
+    .pay-btn {
+        background-color: white;
+        color: #bf9b30;
+    }
+
+    .pay-btn:hover {
+        background-color: #bf9b30;
+        color: white;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+{% if error %}
+<div class="container">
+    <div class="alert alert-danger alert-dismissible fade show mt-2 mb-2 col-md-10 mx-auto" id="danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>OUPS!!</strong> <span id="dangertext"> {{error}} </span>
+    </div>
+</div>
+
+{% endif %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5 ">
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="mb-2">Evolution de la levée</h5>
+                            <p>{{campagne.solde_obtenu}} sur <span class="text-primary">{{campagne.amount_needed}}
+                                </span>
+                                Fcfa</p>
+                            <div class="progress">
+                                <div class="progress-bar rounded" role="progressbar"
+                                    style="width: {{campagne.pourcentage}}%;" aria-valuenow="{{campagne.pourcentage}}"
+                                    aria-valuemin="0" aria-valuemax="100">{{campagne.pourcentage}}%</div>
+                            </div>
+                            <span>Nombre d'investisseurs: <span
+                                    class="text-primary">{{campagne.nb_investissements_valid}}</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 ">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class=" mb-2">Modalités d'investissement</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item mb-2">
+                                            <span class="d-block text-secondary">MONTANT PLANCHE</span>
+                                            <span class="font-weight-bold">50,000,000</span> Fcfa
+                                        </li>
+                                        <li class="list-inline-item mb-2">
+                                            <span class="d-block text-secondary">INSTRUMENT</span>
+                                            <span class="font-weight-bold">Obligation</span>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <span class="d-block text-secondary">TAUX D'INTÊRET</span>
+                                            <span class="font-weight-bold">20 - 30%</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item mb-2">
+                                            <span class="d-block text-secondary">MONTANT PLAFOND</span>
+                                            <span class="font-weight-bold">75,000,000</span> Fcfa
+                                        </li>
+                                        <li class="list-inline-item mb-2">
+                                            <span class="d-block text-secondary">TICKET MINIMUM</span>
+                                            <span class="font-weight-bold">100,000</span> Fcfa
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <span class="d-block text-secondary">DURÉE DU PRÊT</span>
+                                            <span class="font-weight-bold">6 à 12 Mois</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 order-first order-md-last mb-3">
+            <div class="embed-responsive embed-responsive-16by9" style="min-height: 430px;">
+                <!-- <iframe class="embed-responsive-item rounded" src="https://www.youtube.com/embed/qEx7XT5oNuI"
+                    allowfullscreen></iframe> -->
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/yKvD93eMmW8?si=vZnYUHA-tmALABgb"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <!-- old embed link: https://www.youtube.com/embed/PWjhOUZMhxY?autoplay=1 -->
+        </div>
+    </div>
+</div>
+<div class="container rounded mt-5" style="background: rgba(238, 238, 238, 0.8) ">
+    <h1 class="text-center text-primary m-0" style="font-size:60px">Le Projet</h1>
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+
+            <div id="main">
+                <div class="container">
+                    <div class="accordion" id="faq">
+                        <div class="card shadow">
+                            <div class="card-header " id="faqhead1">
+                                <a href="#" class="btn btn-header-link" data-toggle="collapse" data-target="#faq1"
+                                    aria-expanded="true" aria-controls="faq1">
+                                    <b>
+                                        Présentation de InnovaFlow
+                                    </b>
+                                </a>
+                            </div>
+
+                            <div id="faq1" class="collapse show" aria-labelledby="faqhead1" data-parent="#faq">
+                                <div class="card-body">
+                                    InnovaFlow est une plateforme SaaS innovante conçue pour simplifier et optimiser la
+                                    gestion des flux de travail et des projets pour les entreprises de toutes tailles.
+                                    Notre objectif est de fournir une solution tout-en-un qui centralise la
+                                    planification, la collaboration et le suivi des performances, le tout dans une
+                                    interface intuitive et conviviale.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow">
+                            <div class="card-header" id="faqhead2">
+                                <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                    data-target="#faq2" aria-expanded="true" aria-controls="faq2"><b>Fonctionnalités
+                                        Clés :</b></a>
+                            </div>
+
+                            <div id="faq2" class="collapse" aria-labelledby="faqhead2" data-parent="#faq">
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            Gestion de Projet Intuitive : Créez, assignez et suivez les tâches avec des
+                                            tableaux de bord visuels et des timelines interactives.
+                                        </li>
+                                        <li>Collaboration en Temps Réel : Travaillez en équipe, partagez des fichiers et
+                                            communiquez sans interruption grâce à des outils intégrés de chat et de
+                                            vidéo.</li>
+                                        <li>Automatisation des Processus : Automatisez les tâches répétitives et gagnez
+                                            du temps avec des workflows personnalisables.</li>
+                                        <li>Analyses et Reporting : Accédez à des rapports détaillés pour évaluer les
+                                            performances de vos projets et prendre des décisions éclairées.</li>
+                                        <li>Intégrations Fluides : Connectez vos outils préférés avec InnovaFlow grâce à
+                                            notre large gamme d'intégrations API.</li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow">
+                            <div class="card-header" id="faqhead3">
+                                <a href="#" class="btn btn-header-link collapsed" data-toggle="collapse"
+                                    data-target="#faq3" aria-expanded="true" aria-controls="faq3">
+                                    <b>Pourquoi investir dans InnovaFlow ?</b></a>
+                            </div>
+
+                            <div id="faq3" class="collapse" aria-labelledby="faqhead3" data-parent="#faq">
+                                <div class="card-body">
+                                    L'ère numérique exige des outils performants pour gérer des projets complexes.
+                                    InnovaFlow est à la pointe de cette évolution, offrant une solution qui allie
+                                    efficacité et simplicité. Avec un marché en pleine expansion et une équipe
+                                    passionnée derrière le projet, nous sommes convaincus que notre plateforme a le
+                                    potentiel de devenir un acteur majeur dans l'industrie des logiciels de gestion.
+                                    Nous recherchons des investisseurs visionnaires pour nous aider à accélérer notre
+                                    croissance et à réaliser notre vision.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="container rounded mt-5 p-0 mb-5" style="min-height: 400px;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="embed-responsive embed-responsive-16by9" style="max-height: 430px;">
+                <!-- <iframe class="embed-responsive-item rounded" src="https://www.youtube.com/embed/PWjhOUZMhxY?autoplay=1"
+                    allowfullscreen></iframe> -->
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/yKvD93eMmW8?si=vZnYUHA-tmALABgb"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="col-md-6 order-first order-md-last mb-3" id="invest_box">
+
+            <div class="calculate shadow">
+                <div class="calculate-wrap">
+                    <div class="calculate-top">
+                        <div class="calculate-amount mb-3">
+                            <h4>Montant à investir:</h4>
+                        </div>
+                        <p class="calculate-text"><input type="text" id="text" class="calculate-input"></input> Fcfa
+                        </p>
+                    </div>
+                </div>
+                <div class="calculate-slider col-md-12">
+                    <div id="slider"></div>
+                </div>
+                <div class="calculate-inner mb-5">
+                    <div class="row">
+
+                        <div class="calculate-block col-md-6 mx-auto">
+
+                            <p></p>
+                        </div>
+
+                        <div class="calculate-block col-md-6">
+
+                            <p><span id="income"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="calculate-btn-wrapper">
+                    {% if request.user.is_authenticated %}
+                    <a href="#" class="calculate-btn" data-toggle="modal" data-target="#investModal"
+                        id="btn_pay">Investir</a>
+                    {% else %}
+                    <a href="#" class="calculate-btn" data-toggle="modal" data-target="#loginModal">Investir</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="investModal" tabindex="-1" role="dialog" aria-labelledby="investModal"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom-0">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-title text-center">
+                            <h4>Investir dans <span class="text-primary">InnovaFlow</span></h4>
+                        </div>
+                        <div class="d-flex flex-column text-center">
+                            <form>
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="">Montant à investir:</label>
+                                    <input type="number" class="form-control" name="amount" value="" id="amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Type d'investissement:</label>
+                                    <select name="type_invest" id="type_invest" class="form-control">
+                                        <option value="20%" selected="selected">20% pour 6 mois</option>
+                                        <option value="30%">30% pour 12 mois</option>
+                                        <option value="10%">credite mon compte</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Type d'investissement:</label>
+                                    <select name="remboursement" id="remboursement" class="form-control">
+                                        <option value="Trimestriel" selected="selected">Trimestriel</option>
+                                        <option value="Semestriel">Semestriel</option>
+                                        <option value="Aterme">A terme(Annuel)</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-block btn-round pay-btn buy"
+                                    onclick="buy(this)" data-item-id="88">Payer</button>
+                            </form>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endblock content %}
+
+        {% block custom_js %}
+        <script src="{% static 'js/sweetalert.min.js' %} "></script>
+        <script src="{% static 'js/custom.js' %} "></script>
+        <script>
+            const campagne_val = 2000000
+            const user_id = parseInt('{{request.user.investisseur.id}}')
+            console.log(user_id)
+        </script>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.2/nouislider.min.js"></script>
+        <!-- <script type="text/javascript" src="{% static 'js/slider.js' %}"></script> -->
+        <script type="text/javascript">
+
+            let slider = document.getElementById('slider');
+            let background = document.querySelector('.calculate-top');
+            // let procentBlock = document.getElementById('income');
+            let calculateBtn = document.querySelector('.calculate-btn');
+            let value = document.getElementById("text");
+            // let prop = document.getElementById('prop');
+            let inputs = [value];
+            noUiSlider.create(slider, {
+                start: [500],
+                connect: [true, false],
+                range: {
+                    'min': 100000,
+                    'max': campagne_val
+                },
+                step: 500,
+                format: {
+                    from: function (value) {
+                        return Math.round(+value);
+                    },
+                    to: function (value) {
+                        return Math.round(+value);
+                    }
+                },
+                tooltips: {
+                    to: function () {
+                        let numb = +value.value;
+                        var tooltip = document.querySelector('.noUi-tooltip');
+                        return result = (numb < campagne_val * (1 / 4)) ? tooltip.textContent = 'Bronze' :
+                            (numb < campagne_val * (2 / 4)) ? tooltip.textContent = 'Silver' :
+                                (numb < campagne_val - 100000) ? tooltip.textContent = 'Gold' :
+                                    (numb >= campagne_val - 100000) ? tooltip.textContent = 'Diamond' : '';
+
+                    }
+                }
+            });
+
+
+            function color(classBlock, text, color, proportions) {
+                background.className = classBlock;
+                // procentBlock.textContent = text + '%';
+                calculateBtn.style.backgroundColor = color;
+                // prop.textContent = proportions * text / 100;
+            }
+
+            slider.noUiSlider.on('update', function (values, handle) {
+                inputs[handle].value = values[handle];
+            })
+
+            slider.noUiSlider.on('update', function (values, handle) {
+                value.innerHTML = values[handle];
+                let result = (values[handle] < campagne_val * (1 / 4)) ? color('c-50', 118, '#9b4d0a', values[handle]) :
+                    (values[handle] < campagne_val * (2 / 4)) ? color('c-150', 120, '#808080', values[handle]) :
+                        (values[handle] < campagne_val * (3 / 4)) ? color('c-250', 122, '#bf9b30', values[handle]) :
+                            (values[handle] >= campagne_val - 100000) ? color('c-500', 125, '#9ac5db', values[handle]) : ''
+            });
+
+            inputs.forEach(function (input, handle) {
+
+                input.addEventListener('change', function () {
+                    slider.noUiSlider.setHandle(handle, this.value);
+                });
+
+                input.addEventListener('keydown', function (e) {
+
+                    var values = slider.noUiSlider.get();
+                    var value = Number(values[handle]);
+
+                    // [[handle0_down, handle0_up], [handle1_down, handle1_up]]
+                    var steps = slider.noUiSlider.steps();
+
+                    // [down, up]
+                    var step = steps[handle];
+
+                    var position;
+
+                    // 13 is enter,
+                    // 38 is key up,
+                    // 40 is key down.
+                    switch (e.which) {
+
+                        case 13:
+                            stepsSlider.noUiSlider.setHandle(handle, this.value);
+                            break;
+
+                        case 38:
+
+                            // Get step to go increase slider value (up)
+                            position = step[1];
+
+                            // false = no step is set
+                            if (position === false) {
+                                position = 1;
+                            }
+
+                            // null = edge of slider
+                            if (position !== null) {
+                                stepsSlider.noUiSlider.setHandle(handle, value + position);
+                            }
+
+                            break;
+
+                        case 40:
+
+                            position = step[0];
+
+                            if (position === false) {
+                                position = 1;
+                            }
+
+                            if (position !== null) {
+                                stepsSlider.noUiSlider.setHandle(handle, value - position);
+                            }
+
+                            break;
+                    }
+                });
+            });
+
+            let calcInput = document.getElementById('text');
+            calcInput.onkeydown = function (e) {
+                if ((e.which >= 48 && e.which <= 57) // numbers
+                    ||
+                    (e.which >= 96 && e.which <= 105) // num lock
+                    ||
+                    e.which == 8 // backspace
+                    ||
+                    (e.which >= 37 && e.which <= 40) // arrows
+                    ||
+                    e.which == 46 || e.which == 13) // delete and enter
+                {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+        </script>
+        <script>
+            if (user_id) {
+                $(window).on('load', function () {
+                    $('#investModal').modal('show');
+                    document.getElementById("amount").value = parseInt(document.getElementById("text").value)
+                });
+            }
+            document.getElementById("btn_pay").addEventListener("click", function () {
+                document.getElementById("amount").value = parseInt(document.getElementById("text").value)
+            })
+        </script>
+        <script type="text/javascript">
+
+            function buy(btn) {
+                if (user_id) {
+                    (new PayTech({
+                        amount: parseInt(document.getElementById("text").value), //will be sent to paiement.php page
+                        type_invest: document.getElementById("type_invest").value,
+                        remboursement: document.getElementById("remboursement").value,
+                    })).withOption({
+                        requestTokenUrl: "{% url 'send_investissement' %}",
+                        method: 'POST',
+                        headers: {
+                            "Accept": "text/html"
+                        },
+                        prensentationMode: PayTech.OPEN_IN_POPUP,
+                        willGetToken: function () {
+
+                        },
+                        didGetToken: function (token, redirectUrl) {
+
+                        },
+                        didReceiveError: function (error) {
+
+                        },
+                        didReceiveNonSuccessResponse: function (jsonResponse) {
+
+                        }
+                    }).send();
+                } else {
+                    showError("Oups!!! Vous n'avez pas un compte investisseur. Veuillez créer un compte SVP");
+                }
+                //.send params are optional
+            }
+
+        </script>
+        {% endblock custom_js %}

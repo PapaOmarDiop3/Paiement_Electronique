@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/sweetalert.css' %} ">
+<style>
+    .main-body {
+        padding: 15px;
+    }
+
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, .125);
+        border-radius: .25rem;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1rem;
+    }
+
+    .gutters-sm {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+
+    .gutters-sm>.col,
+    .gutters-sm>[class*=col-] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .mb-3,
+    .my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .bg-gray-300 {
+        background-color: #e2e8f0;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .shadow-none {
+        box-shadow: none !important;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    <div class="main-body">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Profil</a></li>
+                {% comment %} <li class="breadcrumb-item active" aria-current="page">User Profile</li> {% endcomment %}
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+
+                <div class="card">
+                    <form id='form'>
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <label for="myphoto">
+                                    {% if request.user.investisseur.carte %}
+                                    <img src="{{request.user.profile_image.url}}" alt="Admin" class="rounded"
+                                        width="250" style="cursor: pointer; display:unset"
+                                        title="modifier image de profil" id="profile_img">
+
+                                    {% else %}
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
+                                        class="rounded-circle" width="150" style="cursor: pointer; display:unset"
+                                        title="modifier image de profil" id="profile_img">
+                                    {% endif %}
+                                </label>
+                                <input type="file" name="profile_image" style="display: none" id="myphoto">
+                                <div class="mt-3">
+                                    <h4>{{request.user.investisseur}}</h4>
+                                    {% comment %} <p class="text-secondary mb-1">Full Stack Developer</p>
+                                    <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p> {% endcomment %}
+                                    <!-- <button class="btn btn-primary">Follow</button>-->
+                                    <button id="btn_img" type="submit" style="display: none;">upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card mt-3">
+                    <form id='form'>
+                        {% csrf_token %}
+                        <label for="moncarte">
+                            <label for="mycarte">
+                                {% if request.user.investisseur.carte %}
+                                <img class="card-img-top" src="{{investisseur.carte.url}}" alt="Card image cap"
+                                    id="carte_img" style="cursor: pointer; display:unset"
+                                    title="modifier piéce d'identité">
+                                {% else %}
+                                <img class="card-img-top" src="{% static 'img/carte.svg' %} " alt="Card image cap"
+                                    id="carte_img" style="cursor: pointer; display:unset"
+                                    title="modifier piéce d'identité">
+                                {% endif %}
+                            </label>
+                            <input type="file" name="carte" style="display: none" id="mycarte">
+                        </label>
+                        <button id="btn_carte" type="submit" style="display: none;">upload</button>
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Prenom et nom</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{request.user.investisseur}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{request.user.email}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Téléphone</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{request.user.investisseur.telephone}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Adresse</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{request.user.investisseur.adresse}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">CNI ou passport</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{request.user.investisseur.cni}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a class="btn btn-info btn-lg " target="__blank"
+                                    href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills"><i
+                                        class="fas fa-pen"></i> Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if investissements %}
+                {% for investissement in investissements %}
+                <div class="row gutters-sm">
+
+                    <div class="col-sm-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-6"><b>{{investissement.campagne}}</b></div>
+                                    <div class="col-md-6"><small class="text-primary float-right">{{investissement.campagne.debut_campagne}} -
+                                        {{investissement.campagne.fin_campagne}}</small></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Date d'investissement</th>
+                                            <th scope="col">Montant investi</th>
+                                            <th scope="col">Type d'investissement</th>
+                                            <th scope="col">Frequence remboursement</th>
+                                            <th scope="col">etat investissement</th>
+                                            <th scope="col">Campagne progression</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">
+                                                <small class="text-primary">{{investissement.make_at}}</small>
+                                            </th>
+                                            <td>
+                                                <small class="text-primary">{{investissement.amount}} Fcfa</small>
+                                            </td>
+                                            <td>
+                                                <small class="text-primary">{{investissement.get_type_display}}</small>
+                                            </td>
+                                            <td>
+                                                <small
+                                                    class="text-primary">{{investissement.get_remboursement_display}}</small>
+                                            </td>
+                                            <td>
+                                                <small
+                                                    class="text-primary">{{investissement.get_status_display}}</small>
+                                            </td>
+                                            <td>
+                                                <div class="progress mb-3" style="height: 5px">
+                                                    <div class="progress-bar bg-primary" role="progressbar"
+                                                        style="width: {{investissement.campagne.pourcentage}}%"
+                                                        aria-valuenow="{{investissement.campagne.pourcentage}}"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-6"><b>Echéances {{investissement.campagne}}</b></div>
+                                    <div class="col-md-6"><small class="text-primary float-right">{{investissement.campagne.debut_campagne}} -
+                                        {{investissement.campagne.fin_campagne}}</small></div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped table-responsive table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Période</th>
+                                            <th scope="col">Montant investi</th>
+                                            <th scope="col">Intéret</th>
+                                            <th scope="col">Total</th>
+                                            <th scope="col">Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if investissement.echeances %}
+                                        {% for echeance in investissement.echeances %}
+                                        <tr>
+                                            <td scope="row">
+                                                <small class="text-primary">{{echeance.periode}}</small>
+                                            </td>
+                                            <td>
+                                                <small class="text-primary">{{echeance.montant_investi}} Fcfa</small>
+                                            </td>
+                                            <td>
+                                                <small class="text-primary">{{echeance.interet}} Fcfa</small>
+                                            </td>
+                                            <td>
+                                                <small class="text-primary">{{echeance.total}} Fcfa</small>
+                                            </td>
+                                            <td>
+                                                {% if echeance.status == "yes" %}
+                                                 <small class="text-primary"><i class="fas fa-check text-success"></i> {{echeance.get_status_display}}</small> 
+                                                {% else %}
+                                                 <small class="text-primary"><i class="fas fa-times text-danger"></i> {{echeance.get_status_display}}</small> 
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="mb-5">
+                {% endfor %}
+                {% endif %}
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script src="{% static 'js/jquery-3.5.1.min.js' %} "></script>
+<script src="{% static 'js/sweetalert.min.js' %} "></script>
+<script src="{% static 'js/custom.js' %} "></script>
+<script>
+    document.getElementById("myphoto").addEventListener("change", function () {
+        document.getElementById("btn_img").click();
+    })
+
+    // document.getElementById("mycarte").addEventListener("change", function () {
+    //     document.getElementById("btn_carte").click();
+    // })
+    // let img = $('#img')
+    // let modifyLabel = $('#modifyLabel')
+    // let action_btn = $('#action_btn')
+    // let myphoto = $('#myphoto')
+    // let profile_img = $('#profile_img')
+    // let imgValue = img.attr('src')
+    // // let loader = $("#loader")
+    function readfichier(e, img) {
+        img = $('#' + img)
+        let imgValue = img.attr('src')
+        if (window.FileReader) {
+
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            if (file && file.type.match('image.*')) {
+
+                img.css('display', 'none')
+                // img_loader.css('display', '')
+                reader.readAsDataURL(file);
+            } else {
+                // img.css('display', 'none');
+                img.attr('src', imgValue);
+                // profile_img.attr('src', imgValue);
+                alert('Erreur')
+            }
+            reader.onloadend = function (e) {
+                img.css('display', '')
+                // img_loader.css('display', 'none')
+                img.attr('src', reader.result);
+                // profile_img.attr('src', reader.result);
+                // action_btn.css('display', '')
+                // modifyLabel.css('display', 'none')
+            }
+        }
+    }
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        document.getElementById('mycarte').addEventListener('change', function (e) {
+            readfichier(e, "carte_img")
+            document.getElementById("btn_carte").click();
+        }, false);
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
+    $("#carte_form").submit(function (e) {
+        e.preventDefault()
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'change_carte' %}",
+            dataType: "JSON",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.status == 1) {
+                    // hideLoader();
+                    //   $("#add_objet").trigger('reset')
+                    showInfo(response.message)
+                }
+                else {
+                    // hideLoader();
+                    showError(response.message);
+                }
+            },
+            error: function (response) {
+                // alerter l'erreur
+                alert("error");
+            }
+        })
+    })
+
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        document.getElementById('myphoto').addEventListener('change', function (e) {
+            readfichier(e, "profile_img")
+            document.getElementById("btn_img").click();
+        }, false);
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
+    $("#form").submit(function (e) {
+        e.preventDefault()
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'change_profile' %}",
+            dataType: "JSON",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.status == 1) {
+                    // hideLoader();
+                    //   $("#add_objet").trigger('reset')
+                    showInfo(response.message)
+                }
+                else {
+                    // hideLoader();
+                    showError(response.message);
+                }
+            },
+            error: function (response) {
+                // alerter l'erreur
+                alert("error");
+            }
+        })
+    })
+</script>
+{% endblock custom_js %}
