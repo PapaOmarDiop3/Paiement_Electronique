@@ -3,18 +3,11 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'home' %}">
       <span class="text-primary" style="font-size: 25px; font-weight: bold">
-        Kay
+        Kaay ci InnovaFlow
       </span>
     </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -26,56 +19,53 @@
           </a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="transactionsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="transactionsDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-exchange-alt"></i> <small>Transactions</small>
           </a>
           <div class="dropdown-menu" aria-labelledby="transactionsDropdown">
-            <a class="dropdown-item" href="#make_payment"><i class="fas fa-credit-card"></i> <small>Faire un paiement</small></a>
-            <a class="dropdown-item" href="#view_balance"><i class="fas fa-wallet"></i> <small>Vérifier le solde</small></a>
+            {% if request.user.is_authenticated %}
+            <a class="dropdown-item" href="#make_payment" data-toggle="modal" data-target="#paimentModal"><i
+                class="fas fa-credit-card"></i>
+              <small>Faire un paiement</small></a>
+            {% else %}
+            <a href="#" class="calculate-btn" data-toggle="modal" data-target="#loginModal">Investir</a>
+            {% endif %} {% if request.user.is_authenticated and request.user.investisseur %}
+            <a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-list"></i>
+              <small>Liste des transactions</small></a>
+            {% endif %}
           </div>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="supportDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="supportDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-headset"></i> <small>Support</small>
           </a>
           <div class="dropdown-menu" aria-labelledby="supportDropdown">
-            <a class="dropdown-item" href="#faqs"><i class="fas fa-question-circle"></i> <small>FAQs</small></a>
-            <a class="dropdown-item" href="#contact"><i class="fas fa-envelope"></i> <small>Contact</small></a>
+            <a class="dropdown-item" href="{% url 'faq' %}"><i class="fas fa-question-circle"></i>
+              <small>FAQs</small></a>
+            <a class="dropdown-item" href="{% url 'contact' %}"><i class="fas fa-envelope"></i>
+              <small>Contact</small></a>
           </div>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0 mr-5">
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated and request.user.investisseur %}
         <label class="label mr-2">Bienvenu(e), {{request.user.investisseur}}!</label>
-        <a
-          class="btn btn-outline-primary btn-round my-2 my-sm-0 mr-2"
-          href="{% url 'profile' %}"
-          title="Mon Profil"
-        >
-          <i class="fas fa-user"></i>
+
+        <a class="nav-link" href="{% url 'profile' %}">
+          <i class="fas fa-user text-primary"></i> <small>Profil</small>
         </a>
-        <a
-          class="btn btn-outline-primary btn-round my-2 my-sm-0 mr-2"
-          href="{% url 'change_password' %}"
-          title="Changer de mot de passe"
-        >
-          <i class="fas fa-lock"></i>
+
+        <a class="nav-link" href="{% url 'change_password' %}">
+          <i class="fas fa-cogs text-primary"></i> <small>Paramètres</small>
         </a>
-        <a
-          class="btn btn-outline-primary btn-round my-2 my-sm-0"
-          href="{% url 'logout' %}"
-          title="Déconnexion"
-        >
+        <a class="btn btn-outline-primary btn-round my-2 my-sm-0" href="{% url 'logout' %}" title="Déconnexion">
           <i class="fas fa-sign-out-alt"></i>
         </a>
         {% else %}
-        <button
-          class="btn btn-outline-primary btn-round my-2 my-sm-0"
-          type="button"
-          title="Mon compte"
-          data-toggle="modal"
-          data-target="#loginModal"
-        >
+        <button class="btn btn-outline-primary btn-round my-2 my-sm-0" type="button" title="Mon compte"
+          data-toggle="modal" data-target="#loginModal">
           <i class="fas fa-user-lock"></i>
         </button>
         {% endif %}

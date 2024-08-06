@@ -45,9 +45,7 @@ def send_investissement(request):
     )
 
     if response.status_code == 200:
-        campagne = Campagne.objects.filter(
-            libelle__iexact="Crowdlending Décembre 2022"
-        ).first()
+        campagne = Campagne.objects.first()
         if campagne:
             Investissement.objects.create(
                 transaction_uid=payload["ref_command"],
@@ -115,3 +113,10 @@ def cancel(request):
     transaction_uid = request.POST.get("token", "")
     Investissement.objects.filter(transaction_uid=transaction_uid).update(status="cancelled")
     return render(request, "cancel.html")
+
+def faqs(request):
+    print("faqs")
+    return render(request, "faq.html")
+
+def contact(request):
+    return render(request, "contact.html")

@@ -186,3 +186,28 @@
   bottom: -5px;
   background: #fff;
 }
+
+.footer {
+  width: 100%;
+  background-color: #f8f9fa; /* Couleur de fond bg-light */
+  padding: 20px 0; /* Espace vertical */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid red; /* Bordure temporaire pour débogage */
+
+}
+
+.footer .container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid blue; /* Bordure temporaire pour débogage */
+
+}
+
+.text-muted {
+  color: #6c757d; /* Couleur du texte text-muted */
+}
